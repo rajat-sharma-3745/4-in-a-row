@@ -18,7 +18,7 @@ class Board {
         if (!this.isValidMove(col)) {
             return { success: false, message: 'Invalid move' };
         }
-        for (let row = this.rows - 1; row >= 0; row++) {
+        for (let row = this.rows - 1; row >= 0; row--) {
             if (this.grid[row][col] === null) {
                 this.grid[row][col] = player;
                 return { success: true, row, col, player };
@@ -30,7 +30,7 @@ class Board {
 
     getValidMoves() {
         const validMoves = [];
-        for (let col = 0; col < this.cols; i++) {
+        for (let col = 0; col < this.cols; col++) {
             if (this.isValidMove(col)) {
                 validMoves.push(col)
             }
