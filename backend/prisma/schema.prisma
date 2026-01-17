@@ -6,3 +6,66 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Player {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  gamesPlayed Int @default(0)
+  gamesWon    Int @default(0)
+  gamesLost   Int @default(0)
+  gamesDrawn  Int @default(0)
+  winRate     Float @default(0)
+
+  gamesAsPlayer1 Game[] @relation("Player1Games")
+  gamesAsPlayer2 Game[] @relation("Player2Games")
+
+  @@index([username])
+  @@index([gamesWon])
+}
+
+model Game {
+  id        String   @id @default(uuid())
+  gameId    String   @unique 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  player1Id String
+  player1   Player @relation("Player1Games", fields: [player1Id], references: [id])
+  
+  player2Id String
+  player2   Player @relation("Player2Games", fields: [player2Id], references: [id])
+
+  winnerId  String?
+  winReason String? // "win", "draw", "forfeit"
+  isBot     Boolean @default(false)
+  
+  startTime DateTime
+  endTime   DateTime
+  duration  Int // in milliseconds
+
+  moveCount   Int
+  moveHistory Json // Array of moves
+
+  @@index([createdAt])
+  @@index([winnerId])
+  @@index([player1Id])
+  @@index([player2Id])
+}
+
+model Analytics {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  
+  eventType String // "game_started", "game_ended", "move_made", etc.
+  
+  gameId    String?
+  playerId  String?
+  data      Json
+  
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([gameId])
+}
