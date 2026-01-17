@@ -1,8 +1,17 @@
 import EVENTS from '../events.js';
+import db from '../../services/database.js'
+
 
 export default function (io, socket, { matchmaking }) {
 
-    socket.on(EVENTS.FIND_MATCH, ({ username }) => {
+    socket.on(EVENTS.FIND_MATCH, async ({ username }) => {
+        console.log(`${username} looking for match...`);
+
+        await db.logEvent('matchmaking_started', {
+            playerId: username,
+            timestamp: Date.now()
+        });
+
         const result = matchmaking.joinQueue(username, socket.id);
 
         if (!result.success) {
@@ -18,6 +27,13 @@ export default function (io, socket, { matchmaking }) {
                     opponent: 'Bot',
                     isBot: true
                 });
+                await db.logEvent('game_started', {
+                    gameId: result.game.id,
+                    player1: username,
+                    player2: 'Bot',
+                    isBot: true,
+                    timestamp: Date.now()
+                });
             } else {
                 const opponentSocketId = result.opponent.socketId;
                 const gameRoom = result.game.id;
@@ -29,6 +45,14 @@ export default function (io, socket, { matchmaking }) {
                     game: result.game,
                     opponent: result.opponent.username,
                     isBot: false
+                });
+
+                await db.logEvent('game_started', {
+                    gameId: result.game.id,
+                    player1: username,
+                    player2: result.opponent.username,
+                    isBot: false,
+                    timestamp: Date.now()
                 });
             }
         } else {
@@ -47,6 +71,13 @@ export default function (io, socket, { matchmaking }) {
                             opponent: 'Bot',
                             isBot: true
                         });
+                        db.logEvent('game_started', {
+                            gameId: botResult.game.id,
+                            player1: username,
+                            player2: 'Bot',
+                            isBot: true,
+                            timestamp: Date.now()
+                        });
                     }
                 }
             }, 10000);
@@ -55,4 +86,5 @@ export default function (io, socket, { matchmaking }) {
             matchmaking.leaveQueue(username);
             socket.emit('left-queue');
         });
-    })}
+    })
+}

@@ -1,4 +1,6 @@
 import EVENTS from '../events.js';
+import db from '../../services/database.js'
+
 
 export default function (io, socket, {
   gameManager,
@@ -7,11 +9,12 @@ export default function (io, socket, {
   socketPlayers
 }) {
 
-  socket.on(EVENTS.JOIN, ({ username }) => {
-    if (!username) {
+  socket.on(EVENTS.JOIN,async ({ username }) => {
+    if (!username || username.trim() === '') {
       socket.emit('error', { message: 'Username required' });
       return;
     }
+    await db.findOrCreatePlayer(username);
 
     playerSockets.set(username, socket.id);
     socketPlayers.set(socket.id, username);
@@ -29,7 +32,11 @@ export default function (io, socket, {
       }
     }
 
-    socket.emit('joined', { username });
+     const player = await db.getPlayer(username);
+    socket.emit('joined', { 
+      username,
+      stats: player 
+    });
   });
 
   socket.on('disconnect', () => {
