@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50:  #f0f9ff;
+  --color-primary-100: #e0f2fe;
+  --color-primary-200: #bae6fd;
+  --color-primary-300: #7dd3fc;
+  --color-primary-400: #38bdf8;
+  --color-primary-500: #0ea5e9;
+  --color-primary-600: #0284c7;
+  --color-primary-700: #0369a1;
+  --color-primary-800: #075985;
+  --color-primary-900: #0c4a6e;
+
+  --color-dark-50:  #f8fafc;
+  --color-dark-100: #f1f5f9;
+  --color-dark-200: #e2e8f0;
+  --color-dark-300: #cbd5e1;
+  --color-dark-400: #94a3b8;
+  --color-dark-500: #64748b;
+  --color-dark-600: #475569;
+  --color-dark-700: #334155;
+  --color-dark-800: #1e293b;
+  --color-dark-900: #0f172a;
+
+  --animate-drop: drop 0.5s ease-in-out;
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-slow: bounce 2s infinite;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@layer base {
+  body {
+    @apply min-h-screen text-white bg-linear-to-br from-dark-900 via-dark-800 to-dark-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-bold
+           py-3 px-6 rounded-lg transition-all duration-200
+           transform hover:scale-105 active:scale-95
+           disabled:opacity-50 disabled:cursor-not-allowed
+           disabled:hover:scale-100;
+  }
+
+  .btn-secondary {
+    @apply bg-dark-700 hover:bg-dark-600 text-white font-bold
+           py-3 px-6 rounded-lg transition-all duration-200
+           transform hover:scale-105 active:scale-95;
+  }
+
+  .card {
+    @apply bg-dark-800 rounded-xl p-6 shadow-2xl border border-dark-700;
+  }
+
+  .disc {
+    @apply w-full h-full rounded-full shadow-lg transition-all duration-300;
+  }
+
+  .disc-player1 {
+    @apply bg-linear-to-br from-red-400 to-red-600;
+  }
+
+  .disc-player2 {
+    @apply bg-linear-to-br from-yellow-400 to-yellow-600;
+  }
+
+  .cell {
+    @apply bg-dark-700 rounded-lg p-1 cursor-pointer
+           hover:bg-dark-600 transition-colors duration-200;
+  }
+
+  .cell-disabled {
+    @apply cursor-not-allowed hover:bg-dark-700;
+  }
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dark-500;
+}
