@@ -65,7 +65,6 @@ class Matchmaking {
     if (!waitingPlayer) {
       return; 
     }
-   console.log('in matching with bot')
    
    const game = this.gameManager.createGame(username, null, true);
    this.waitingPlayers.delete(username);

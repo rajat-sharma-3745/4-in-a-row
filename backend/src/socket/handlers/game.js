@@ -30,28 +30,37 @@ export default function (io, socket, { gameManager }) {
             winReason: result.winReason
         });
 
-        if (result.botMove) {
-            setTimeout(async () => {
-                io.to(gameId).emit(EVENTS.MOVE_MADE, {
-                    player: 'Bot',
-                    move: result.botMove.move,
-                    board: result.botMove.board,
-                    nextTurn: result.botMove.nextTurn,
-                    gameOver: result.botMove.gameOver,
-                    winner: result.botMove.winner,
-                    winReason: result.botMove.winReason
-                });
-
-                if (result.botMove.gameOver) {
-                    const gameData = gameManager.getCompletedGameData(gameId);
-                    await saveCompletedGame(gameData);
-                }
-            }, 100);
-        }
-
-        if (result.gameOver && !result.botMove) {
+        if (result.gameOver) {
             const gameData = gameManager.getCompletedGameData(gameId);
             await saveCompletedGame(gameData);
+            return;
+        }
+
+        if (result.isBot && result.nextTurn === 2) {
+            setTimeout(async () => {
+                try {
+                    const botMoveResult = await gameManager.makeBotMove(gameId);
+
+                    if (botMoveResult) {
+                        io.to(gameId).emit('move-made', {
+                            player: 'Bot',
+                            move: botMoveResult.move,
+                            board: botMoveResult.board,
+                            nextTurn: botMoveResult.nextTurn,
+                            gameOver: botMoveResult.gameOver,
+                            winner: botMoveResult.winner,
+                            winReason: botMoveResult.winReason
+                        });
+
+                        if (botMoveResult.gameOver) {
+                            const gameData = gameManager.getCompletedGameData(gameId);
+                            await saveCompletedGame(gameData);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Bot move error:', error);
+                }
+            }, 600);
         }
     });
 
@@ -66,10 +75,12 @@ export default function (io, socket, { gameManager }) {
         }
     });
 
-    socket.on('quit_game', ({ gameId, username }) => {
+    socket.on('quit_game', async({ gameId, username }) => {
         const result = gameManager.forfeitGame(gameId, username);
         if (result) {
-            io.to(gameId).emit('game_over', {...result,gameOver:true});
+            io.to(gameId).emit('game_over', { ...result, gameOver: true });
+            const gameData = gameManager.getCompletedGameData(gameId);
+            await saveCompletedGame(gameData);
         }
     })
 };

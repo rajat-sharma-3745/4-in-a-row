@@ -107,7 +107,7 @@ class Bot {
   }
 
   async makeMove(board) {
-    const thinkingTime = Math.random() * 400 + 100;
+    const thinkingTime = Math.random() * 800 + 100;
     await new Promise(resolve => setTimeout(resolve, thinkingTime));
 
     return this.getBestMove(board);

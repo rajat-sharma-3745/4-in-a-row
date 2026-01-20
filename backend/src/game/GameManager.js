@@ -131,18 +131,13 @@ class GameManager {
 
         game.currentTurn = game.currentTurn === 1 ? 2 : 1;
 
-        let botMove = null;
-        if (game.isBot && game.currentTurn === 2) {
-            botMove = await this.makeBotMove(gameId);
-        }
-
         return {
             success: true,
             move: moveResult,
             gameOver: false,
             board: game.board.getBoard(),
             nextTurn: game.currentTurn,
-            botMove: botMove
+            isBot: game.isBot
         };
     }
 
@@ -336,7 +331,7 @@ class GameManager {
 
     cleanupFinishedGames() {
         const now = Date.now();
-        const keepTime = 300000; 
+        const keepTime = 300000;
 
         for (const [gameId, game] of this.games.entries()) {
             if (game.status === 'finished' && (now - game.endTime) > keepTime) {
