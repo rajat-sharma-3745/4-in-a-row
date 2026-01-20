@@ -1,5 +1,6 @@
 import EVENTS from '../events.js';
 import db from '../../services/database.js'
+import { saveCompletedGame } from './game.js';
 
 
 export default function (io, socket, {
@@ -9,7 +10,7 @@ export default function (io, socket, {
   socketPlayers
 }) {
 
-  socket.on(EVENTS.JOIN,async ({ username }) => {
+  socket.on(EVENTS.JOIN, async ({ username }) => {
     if (!username || username.trim() === '') {
       socket.emit('error', { message: 'Username required' });
       return;
@@ -32,10 +33,10 @@ export default function (io, socket, {
       }
     }
 
-     const player = await db.getPlayer(username);
-    socket.emit('joined', { 
+    const player = await db.getPlayer(username);
+    socket.emit('joined', {
       username,
-      stats: player 
+      stats: player
     });
   });
 
@@ -53,6 +54,21 @@ export default function (io, socket, {
         message: 'Opponent disconnected. 30s to reconnect.'
       });
     }
+    let result;
+    let timer = setInterval(async () => {
+      result = gameManager.checkAbandonedGames();
+      if (result?.status === 'finished') {
+        clearInterval(timer)
+        io.to(game.id).emit('game_over', { ...result, gameOver: true });
+        const gameData = gameManager.getCompletedGameData(game.id);
+        await saveCompletedGame(gameData);
+
+      }
+    }, 5000);
+    setTimeout(() => {
+      clearInterval(timer);
+      console.log('Interval cleared after 45 seconds');
+    }, 45000);
 
     playerSockets.delete(username);
     socketPlayers.delete(socket.id);

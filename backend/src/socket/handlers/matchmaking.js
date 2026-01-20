@@ -86,9 +86,9 @@ export default function (io, socket, { matchmaking }) {
                 }
             }, 10000);
         }
-        socket.on(EVENTS.LEAVE_QUEUE, ({ username }) => {
-            matchmaking.leaveQueue(username);
-            socket.emit('left-queue');
-        });
     })
+    socket.on(EVENTS.LEAVE_QUEUE, ({ username }) => {
+        matchmaking.leaveQueue(username);
+        socket.emit('left-queue');
+    });
 }

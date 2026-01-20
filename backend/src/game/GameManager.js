@@ -259,11 +259,11 @@ class GameManager {
             if (game.status !== 'active') continue;
 
             if (!game.players.player1.connected && (now - game.players.player1.lastSeen) > timeout) {
-                this.forfeitGame(gameId, game.players.player1.username);
+                return this.forfeitGame(gameId, game.players.player1.username);
             }
 
             if (!game.isBot && game.players.player2 && !game.players.player2.connected && (now - game.players.player2.lastSeen) > timeout) {
-                this.forfeitGame(gameId, game.players.player2.username);
+                return this.forfeitGame(gameId, game.players.player2.username);
             }
         }
     }

@@ -45,6 +45,7 @@ export const GameProvider = ({ children }) => {
   const [username, setUsername] = useState("");
   const [playerStats, setPlayerStats] = useState(null);
   const [isJoined, setIsJoined] = useState(false);
+  const [isJoining,setIsJoining] = useState(false)
 
   // Game state
   const [gameState, setGameState] = useState(null);
@@ -72,6 +73,7 @@ export const GameProvider = ({ children }) => {
 
   // Join with username
   const joinGame = (name) => {
+    setIsJoining(true)
     if (!socket || !connected) {
       setError("Not connected to server");
       return;
@@ -152,6 +154,7 @@ export const GameProvider = ({ children }) => {
 
   const joinedHandler = useCallback((data) => {
     setIsJoined(true);
+    setIsJoining(false)
     setPlayerStats(data.stats);
     fetchLeaderboard();
   }, []);
@@ -208,6 +211,7 @@ export const GameProvider = ({ children }) => {
 
 
   const gameOverHandler = useCallback((data) => {
+    console.log(data)
     if (data.gameOver) {
       setGameOver(true);
       setWinner(data.winner);
@@ -261,6 +265,7 @@ export const GameProvider = ({ children }) => {
     username,
     playerStats,
     isJoined,
+    isJoining,
     joinGame,
 
     // Game

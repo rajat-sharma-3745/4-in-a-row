@@ -86,7 +86,7 @@ export default function (io, socket, { gameManager }) {
 };
 
 
-async function saveCompletedGame(gameData) {
+export async function saveCompletedGame(gameData) {
     try {
         const savedGame = await db.saveGame(gameData);
         console.log(`Game saved to database: ${savedGame.id}`);

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useGame } from '../context/GameContext';
 
 const HomeScreen = () => {
-  const { joinGame, findMatch, isSearchingMatch, leaveQueue, connected } = useGame();
+  const { joinGame,isJoining, findMatch, isSearchingMatch, leaveQueue, connected } = useGame();
   const [name, setName] = useState('');
 
   const handleJoin = (e) => {
@@ -53,7 +53,7 @@ const HomeScreen = () => {
             disabled={!name.trim() || !connected}
             className="btn-primary w-full"
           >
-            Join Game
+            {isJoining?"Joining...":"Join Game"}
           </button>
         </form>
 
