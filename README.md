@@ -1,6 +1,6 @@
 # 4 in a Row - Real-Time Multiplayer Game
 
-A full-stack, real-time multiplayer implementation of the classic Connect Four game with competitive bot AI, built for the Backend Engineering Intern Assignment.
+A full-stack, real-time multiplayer implementation of the classic Connect Four game with competitive bot, built for the Backend Engineering Intern Assignment.
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18.2-blue.svg)](https://reactjs.org/)
@@ -19,15 +19,15 @@ A full-stack, real-time multiplayer implementation of the classic Connect Four g
 - [Environment Variables](#-environment-variables)
 - [Running the Application](#-running-the-application)
 - [API Documentation](#-api-documentation)
-- [Bot AI Strategy](#-bot-ai-strategy)
+- [Bot Strategy](#-bot-ai-strategy)
 - [Deployment](#-deployment)
 
 
-## ✨ Features
+## Features
 
 ### Core Gameplay
 - **Real-time Multiplayer** - Play against other players using WebSocket connections
-- **Competitive Bot AI** - Strategic bot with minimax algorithm and alpha-beta pruning
+- **Competitive Bot** - Strategic bot with minimax algorithm and alpha-beta pruning
 - **Smart Matchmaking** - Auto-match with bot after 10-second timeout
 - **Reconnection Support** - 30-second grace period to rejoin games
 - **Move Validation** - Server-side validation for all moves
@@ -49,7 +49,7 @@ A full-stack, real-time multiplayer implementation of the classic Connect Four g
 - **Error Handling** - Comprehensive error handling and user feedback
 - **Connection Management** - Auto-reconnect and disconnect handling
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Backend
 - **Runtime:** Node.js (v18+)
@@ -88,7 +88,7 @@ graph TB
         API[REST API]
         GM[Game Manager]
         MM[Matchmaking]
-        BOT[Bot AI]
+        BOT[Bot]
     end
     
     subgraph Data["Data Layer"]
@@ -155,8 +155,8 @@ graph TD
     CHECK -->|Yes| RESULT[Show Result Modal]
     
     RESULT --> WINNER{Winner?}
-    WINNER -->|Yes| CONFETTI[🎉 Confetti]
-    WINNER -->|Draw| DRAW[🤝 Draw Message]
+    WINNER -->|Yes| CONFETTI[Confetti]
+    WINNER -->|Draw| DRAW[ Draw Message]
     WINNER -->|Forfeit| FORFEIT[Opponent Disconnected]
     
     CONFETTI --> CHOICE[User Choice]
@@ -169,7 +169,7 @@ graph TD
     style START fill:#4299e1
     style GAME fill:#48bb78
     style RESULT fill:#ed8936
-    style CONFETTI fill:#f6e05e
+    style CONFETTI fill:#ed8936
 ```
 
 ## System Flow
@@ -180,7 +180,7 @@ sequenceDiagram
     participant S as Socket Server
     participant GM as Game Manager
     participant MM as Matchmaking
-    participant BOT as Bot AI
+    participant BOT as Bot 
     participant DB as Database
     
     Note over C,DB: Connection & Authentication
@@ -476,7 +476,7 @@ Returns game analytics and insights.
 | `game-reconnected` | `{ game: object }` | Reconnected to existing game |
 | `error` | `{ message: string }` | Error notification |
 
-## Bot AI Strategy
+## Bot Strategy
 
 The bot uses a sophisticated minimax algorithm with alpha-beta pruning:
 
