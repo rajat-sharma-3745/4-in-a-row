@@ -1,6 +1,6 @@
-import Board from "./Board";
-import Bot from "./Bot";
-import GameEngine from "./GameEngine";
+import Board from "./Board.js";
+import Bot from "./Bot.js";
+import GameEngine from "./GameEngine.js";
 
 class GameManager {
     constructor() {
@@ -11,7 +11,7 @@ class GameManager {
     createGame(player1, player2 = null, isBot = false) {
         const gameId = this.generateGameId();
         const board = new Board();
-        const engine = new GameEngine();
+        const engine = new GameEngine(board);
 
         const game = {
             id: gameId,
@@ -61,7 +61,6 @@ class GameManager {
         if (player2 && !isBot) {
             this.playerGames.set(player2, gameId);
         }
-
         return game;
     }
 

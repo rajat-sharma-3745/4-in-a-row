@@ -41,7 +41,7 @@ class Matchmaking {
     }
 
     const timeout = setTimeout(() => {
-      this.matchWithBot(username, socketId);
+      // this.matchWithBot(username, socketId);
     }, 10000); 
 
     this.waitingPlayers.set(username, {
@@ -65,10 +65,10 @@ class Matchmaking {
     if (!waitingPlayer) {
       return; 
     }
-
-    this.waitingPlayers.delete(username);
-
-    const game = this.gameManager.createGame(username, null, true);
+   console.log('in matching with bot')
+   
+   const game = this.gameManager.createGame(username, null, true);
+   this.waitingPlayers.delete(username);
 
     return {
       success: true,

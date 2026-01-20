@@ -65,23 +65,30 @@ export default function (io, socket, { gameManager }) {
             socket.emit('error', { message: 'Game not found' });
         }
     });
+
+    socket.on('quit_game', ({ gameId, username }) => {
+        const result = gameManager.forfeitGame(gameId, username);
+        if (result) {
+            io.to(gameId).emit('game_over', {...result,gameOver:true});
+        }
+    })
 };
 
 
 async function saveCompletedGame(gameData) {
-  try {
-    const savedGame = await db.saveGame(gameData);
-    console.log(`Game saved to database: ${savedGame.id}`);
+    try {
+        const savedGame = await db.saveGame(gameData);
+        console.log(`Game saved to database: ${savedGame.id}`);
 
-    await db.logEvent('game_ended', {
-      gameId: gameData.gameId,
-      winner: gameData.winner,
-      winReason: gameData.winReason,
-      duration: gameData.duration,
-      moveCount: gameData.moveCount,
-      timestamp: Date.now()
-    });
-  } catch (error) {
-    console.error('Error saving game:', error);
-  }
+        await db.logEvent('game_ended', {
+            gameId: gameData.gameId,
+            winner: gameData.winner,
+            winReason: gameData.winReason,
+            duration: gameData.duration,
+            moveCount: gameData.moveCount,
+            timestamp: Date.now()
+        });
+    } catch (error) {
+        console.error('Error saving game:', error);
+    }
 }

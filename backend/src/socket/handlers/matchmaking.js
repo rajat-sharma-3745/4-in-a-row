@@ -13,7 +13,7 @@ export default function (io, socket, { matchmaking }) {
         });
 
         const result = matchmaking.joinQueue(username, socket.id);
-
+        console.log(result)
         if (!result.success) {
             socket.emit('matchmaking-error', { error: result.error });
             return;
@@ -21,6 +21,7 @@ export default function (io, socket, { matchmaking }) {
 
         if (result.matched) {
             if (result.isBot) {
+                console.log('bot ',result.game.id)
                 socket.join(result.game.id);
                 socket.emit('match-found', {
                     game: result.game,
@@ -39,7 +40,7 @@ export default function (io, socket, { matchmaking }) {
                 const gameRoom = result.game.id;
 
                 socket.join(gameRoom);
-                io.to(opponentSocketId).join(gameRoom);
+                io.sockets.sockets.get(opponentSocketId).join(gameRoom);
 
                 io.to(gameRoom).emit('match-found', {
                     game: result.game,
@@ -61,9 +62,10 @@ export default function (io, socket, { matchmaking }) {
             });
 
             setTimeout(() => {
+                console.log(matchmaking.isInQueue(username))
                 if (matchmaking.isInQueue(username)) {
                     const botResult = matchmaking.matchWithBot(username, socket.id);
-
+                    console.log(botResult)
                     if (botResult) {
                         socket.join(botResult.game.id);
                         socket.emit('match-found', {

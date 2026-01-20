@@ -1,6 +1,6 @@
-import registerConnectionHandlers from './handlers/connection';
-import registerMatchmakingHandlers from './handlers/matchmaking';
-import registerGameHandlers from './handlers/game';
+import registerConnectionHandlers from './handlers/connection.js';
+import registerMatchmakingHandlers from './handlers/matchmaking.js';
+import registerGameHandlers from './handlers/game.js';
 
 export function initSocket(io, deps) {
   io.on('connection', (socket) => {

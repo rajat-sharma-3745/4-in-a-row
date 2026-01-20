@@ -1,6 +1,14 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaNeon } from '@prisma/adapter-neon'
+// import { neon } from '@neondatabase/serverless'
 
-const prisma = new PrismaClient();
+// const sql = neon(process.env.DATABASE_URL)
+
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL })
+
+const prisma = new PrismaClient({
+  adapter
+});
 
 class DatabaseService {
   // Player Methods
